@@ -4,6 +4,7 @@ let allTerms = [];
 let checkPollingInterval = null;
 let lastOutputIndex = 0;
 let keywords = [];
+let captchaNotificationShown = false;
 
 // Initialize dashboard
 document.addEventListener('DOMContentLoaded', async () => {
@@ -117,9 +118,13 @@ async function pollCheckStatus() {
         const captchaAlert = document.getElementById('captchaAlert');
         if (data.captchaRequired) {
             captchaAlert.style.display = 'block';
-            showNotification('CAPTCHA Required', 'Please solve the CAPTCHA in the browser window');
+            if (!captchaNotificationShown) {
+                showNotification('CAPTCHA Required', 'Please solve the CAPTCHA in the browser window');
+                captchaNotificationShown = true;
+            }
         } else {
             captchaAlert.style.display = 'none';
+            captchaNotificationShown = false;
         }
 
         // Update status
