@@ -8,8 +8,9 @@ const fs = require('fs');
 // Configuration
 const DOMAIN_TO_TRACK = 'raindropjanitorial.com';
 const TERMS_FILE = './search-terms.json';
-// Headless: false allows you to see the browser and solve CAPTCHAs manually if needed
-const HEADLESS = false;
+// Headless: false by default to allow manual CAPTCHA solving. 
+// Set HEADLESS=true environment variable to run headlessly.
+const HEADLESS = process.env.HEADLESS === 'true';
 const MAX_PAGES = 3;
 
 async function checkRank(browser, term) {
