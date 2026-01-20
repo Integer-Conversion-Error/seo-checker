@@ -42,10 +42,23 @@ A robust Puppeteer-based tool to check Google Search rankings for your domain.
 
 2. **Run the Checker**:
    ```bash
+   npm run check
+   # or
    node index.js
    ```
 
-3. **Headless Mode**:
+3. **Web Dashboard** (Recommended):
+   ```bash
+   npm run dashboard
+   ```
+   Open http://localhost:3001 to:
+   - **Run checks from the browser** with live output
+   - **Get CAPTCHA notifications** when manual solving is needed
+   - **View ranking trends** with interactive charts
+   - **Filter by date range** and search term
+   - **See top gainers/losers** at a glance
+
+4. **Headless Mode**:
    By default, the browser opens visibly (`headless: false`) to let you solve CAPTCHAs manually if they appear.
    To run headlessly (e.g., on a server):
    ```bash
@@ -53,7 +66,7 @@ A robust Puppeteer-based tool to check Google Search rankings for your domain.
    ```
 
 ## Logic
-The script launches a browser, navigates to Google, and performs a search for each term in your list. It scrapes the results and prints a report to the console.
+The script launches a browser, navigates to Google, and performs a search for each term in your list. It scrapes the results and saves them to an SQLite database (`seo-results.db`).
 
 ## Chrome Profile & Avoiding Rate Limits
 

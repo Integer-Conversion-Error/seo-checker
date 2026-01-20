@@ -4,12 +4,16 @@
     "description": "SEO position checker for Raindrop Janitorial",
     "main": "index.js",
     "scripts": {
-        "start": "node index.js"
+        "start": "node index.js",
+        "check": "node index.js",
+        "dashboard": "node server.js"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "better-sqlite3": "^12.6.2",
+        "express": "^5.2.1",
         "puppeteer": "^24.1.0",
         "puppeteer-extra": "^3.3.6",
         "puppeteer-extra-plugin-stealth": "^2.11.2"

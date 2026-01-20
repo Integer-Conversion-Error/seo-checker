@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Ranking Dashboard</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <div class="dashboard">
+        <header class="header">
+            <div class="header-content">
+                <i data-lucide="bar-chart-2" class="logo-icon"></i>
+                <div>
+                    <h1>SEO Dashboard</h1>
+                    <p class="subtitle">Track your search engine rankings over time</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Run Check Section -->
+        <section class="run-check-section">
+            <div class="run-check-header">
+                <h2><i data-lucide="search"></i> Run SEO Check</h2>
+                <div class="run-check-controls">
+                    <button id="startCheck" class="btn btn-primary">
+                        <i data-lucide="play"></i> Start Check
+                    </button>
+                    <button id="stopCheck" class="btn btn-danger" disabled>
+                        <i data-lucide="square"></i> Stop
+                    </button>
+                </div>
+            </div>
+            <div id="captchaAlert" class="captcha-alert" style="display: none;">
+                <i data-lucide="alert-triangle"></i>
+                <div>
+                    <strong>CAPTCHA Required!</strong> Please solve the CAPTCHA in the browser window that opened.
+                </div>
+            </div>
+            <div class="check-status">
+                <span>Status: </span>
+                <span id="checkStatus" class="status-badge idle">Idle</span>
+            </div>
+            <div id="checkOutput" class="check-output">
+                <p class="empty-state">Click "Start Check" to run an SEO check</p>
+            </div>
+        </section>
+
+        <!-- Keywords Management Section -->
+        <section class="keywords-section">
+            <div class="keywords-header">
+                <h2><i data-lucide="key"></i> Keywords</h2>
+                <div class="keywords-actions">
+                    <button id="selectAll" class="btn btn-sm">Select All</button>
+                    <button id="selectNone" class="btn btn-sm">Select None</button>
+                    <button id="selectFavorites" class="btn btn-sm btn-favorites">
+                        <i data-lucide="star" class="icon-sm"></i> Favorites Only
+                    </button>
+                </div>
+            </div>
+            <div class="add-keyword">
+                <input type="text" id="newKeyword" placeholder="Add new keyword..." />
+                <button id="addKeyword" class="btn btn-primary">
+                    <i data-lucide="plus"></i> Add
+                </button>
+            </div>
+            <div class="keywords-stats">
+                <span id="keywordStats">0 selected of 0 keywords</span>
+            </div>
+            <div id="keywordsList" class="keywords-list">
+                <p class="loading">Loading keywords...</p>
+            </div>
+        </section>
+
+        <!-- Top Movers Section -->
+        <section class="movers-section">
+            <div class="mover-card gainers">
+                <h3><i data-lucide="trending-up"></i> Top Gainers</h3>
+                <div id="topGainers" class="mover-list">
+                    <p class="loading">Loading...</p>
+                </div>
+            </div>
+            <div class="mover-card losers">
+                <h3><i data-lucide="trending-down"></i> Top Losers</h3>
+                <div id="topLosers" class="mover-list">
+                    <p class="loading">Loading...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <section class="filters">
+            <div class="filter-group">
+                <label for="termSelect">Search Term:</label>
+                <select id="termSelect">
+                    <option value="">All Terms</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="dateFrom">From:</label>
+                <input type="date" id="dateFrom">
+            </div>
+            <div class="filter-group">
+                <label for="dateTo">To:</label>
+                <input type="date" id="dateTo">
+            </div>
+            <button id="applyFilters" class="btn">
+                <i data-lucide="filter"></i> Apply Filters
+            </button>
+        </section>
+
+        <!-- Chart Section -->
+        <section class="chart-section">
+            <h2><i data-lucide="line-chart"></i> Ranking Trends</h2>
+            <div class="chart-container">
+                <canvas id="rankingChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Results Table -->
+        <section class="results-section">
+            <h2><i data-lucide="list"></i> Latest Results</h2>
+            <div class="table-container">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Search Term</th>
+                            <th>Rank</th>
+                            <th>Change</th>
+                            <th>AI Summary</th>
+                            <th>Places</th>
+                            <th>Sponsored</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsBody">
+                        <tr>
+                            <td colspan="6" class="loading">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Run History -->
+        <section class="history-section">
+            <h2><i data-lucide="history"></i> Run History</h2>
+            <div id="runHistory" class="run-list">
+                <p class="loading">Loading...</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>

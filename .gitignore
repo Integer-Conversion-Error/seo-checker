@@ -1,3 +1,7 @@
-/node_modules
-search-terms.json
+node_modules/
 seo-results.db
+search-terms.json
+keywords-config.json
+.env
+.DS_Store
+Thumbs.db

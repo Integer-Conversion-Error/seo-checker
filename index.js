@@ -3,11 +3,40 @@ const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const path = require('path');
 const os = require('os');
+const Database = require('better-sqlite3');
 
 // Configure stealth plugin with all evasions
 puppeteer.use(StealthPlugin());
 
 const fs = require('fs');
+
+// Database setup
+const DB_PATH = path.join(__dirname, 'seo-results.db');
+const db = new Database(DB_PATH);
+
+// Initialize database tables
+db.exec(`
+    CREATE TABLE IF NOT EXISTS runs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp TEXT NOT NULL,
+        domain TEXT NOT NULL
+    );
+    
+    CREATE TABLE IF NOT EXISTS results (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id INTEGER NOT NULL,
+        term TEXT NOT NULL,
+        organic_rank INTEGER,
+        page_found INTEGER,
+        ai_summary INTEGER DEFAULT 0,
+        places INTEGER DEFAULT 0,
+        sponsored INTEGER DEFAULT 0,
+        FOREIGN KEY (run_id) REFERENCES runs(id)
+    );
+    
+    CREATE INDEX IF NOT EXISTS idx_results_run_id ON results(run_id);
+    CREATE INDEX IF NOT EXISTS idx_results_term ON results(term);
+`);
 
 // Configuration
 const DOMAIN_TO_TRACK = 'raindropjanitorial.com';
@@ -411,6 +440,8 @@ async function checkRank(browser, term, isFirstSearch) {
     } finally {
         await page.close();
     }
+
+    return report;
 }
 
 (async () => {
@@ -451,12 +482,36 @@ async function checkRank(browser, term, isFirstSearch) {
         ignoreDefaultArgs: ['--enable-automation']
     });
 
+    // Create a new run in the database
+    const timestamp = new Date().toISOString();
+    const insertRun = db.prepare('INSERT INTO runs (timestamp, domain) VALUES (?, ?)');
+    const runResult = insertRun.run(timestamp, DOMAIN_TO_TRACK);
+    const runId = runResult.lastInsertRowid;
+    console.log(`📊 Database run ID: ${runId}\n`);
+
+    // Prepare insert statement for results
+    const insertResult = db.prepare(`
+        INSERT INTO results (run_id, term, organic_rank, page_found, ai_summary, places, sponsored)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+
     try {
         for (let i = 0; i < searchTerms.length; i++) {
             const term = searchTerms[i];
             const isFirstSearch = (i === 0);
 
-            await checkRank(browser, term, isFirstSearch);
+            const report = await checkRank(browser, term, isFirstSearch);
+
+            // Save result to database
+            insertResult.run(
+                runId,
+                report.term,
+                report.organicRank,
+                report.foundOnPage,
+                report.aiSummary ? 1 : 0,
+                report.places ? 1 : 0,
+                report.sponsored ? 1 : 0
+            );
 
             // Longer delay between different search terms
             if (i < searchTerms.length - 1) {
@@ -470,4 +525,8 @@ async function checkRank(browser, term, isFirstSearch) {
     }
 
     console.log('\n✅ SEO check complete!');
+    console.log(`📊 Results saved to database (Run #${runId})`);
+
+    // Close database connection
+    db.close();
 })();
