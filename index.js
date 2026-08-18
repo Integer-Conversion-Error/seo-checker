@@ -44,7 +44,7 @@ const TERMS_FILE = './search-terms.json';
 // Headless: false by default to allow manual CAPTCHA solving. 
 // Set HEADLESS=true environment variable to run headlessly.
 const HEADLESS = process.env.HEADLESS === 'true';
-const MAX_PAGES = 3;
+const MAX_PAGES = 6;
 
 // Anti-detection settings
 const USER_DATA_DIR = path.join(os.homedir(), '.seo-checker-profile');

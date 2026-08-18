@@ -655,7 +655,8 @@ async function updateKeyword(index, field, value) {
 
 // Delete keyword
 async function deleteKeyword(index) {
-    if (!confirm('Are you sure you want to delete this keyword?')) return;
+    // Removed confirmation for smoother UX
+    // if (!confirm('Are you sure you want to delete this keyword?')) return;
 
     try {
         const response = await fetch(`/api/keywords/${index}`, {
